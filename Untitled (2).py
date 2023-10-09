@@ -141,6 +141,38 @@ plt.ylabel('Error')
 plt.title('Error vs Epoch')
 plt.show()#Plotting the graph for ReLU function
 
+#A2 Sigmoid Function
+#defining a sigmoid function
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+converge_error = 0.002#convergence error to be taken is given in the question
+errorlist = []#initialise an error list
+alpha = 0.05
+epochs = 1000
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])#inputs for and gate
+y = np.array([0, 0, 0, 1])#outputs for and gate 
+W = np.array([10, 0.2, -0.75])#weights to be taken given in the question
+for epoch in range(epochs):
+    error = 0#initialise error value to 0
+    for i in range(len(X)):
+        y_pred = sigmoid(np.dot(X[i], W[1:]) + W[0])  
+        W[1:] += alpha * (y[i] - y_pred) * X[i]
+        W[0] += alpha * (y[i] - y_pred)  
+        error += (y[i] - y_pred) ** 2
+    error /= len(X)#calculate error for each iteration
+    errorlist.append(error)#Append the error list with the error gained after each iteration
+    if error <= converge_error:
+        print("Sigmoid Function Converged after", epoch + 1, "epoch")#Printing after how many iterations ReLU function converged
+        break
+plt.plot(range(1, epoch + 2), errorlist)
+print(f"Sigmoid Converged after {epoch+1} epoch")
+plt.xlabel('Epoch')
+plt.ylabel('Error')
+plt.title('Error vs Epoch (Sigmoid)')
+plt.show()#Plotting the graph for ReLU function
+
+
+
 
 
 
