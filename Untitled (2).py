@@ -24,6 +24,61 @@ W0 = 10
 W1 = 0.2
 W2 = -0.75
 learning_rate = 0.05
+#a3
+import numpy as np
+import matplotlib.pyplot as plt
+# Initial weights
+weights = np.array([10, 0.2, -0.75])
+# XOR gate training data
+training_data_xor = [
+    {'input': np.array([1, 0, 0]), 'output': 0},
+    {'input': np.array([1, 0, 1]), 'output': 1},
+    {'input': np.array([1, 1, 0]), 'output': 1},
+    {'input': np.array([1, 1, 1]), 'output': 0},
+]
+#learning rates to test
+learning_rates = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+def step_function(x):
+    return 1 if x >= 0 else 0
+# Function to train the perceptron and return the convergence epoch
+def train_perceptron(learning_rate):
+    weight_copy = np.array(weights)  # Make a copy of initial weights
+    convergence_epoch = None
+    for epoch in range(2000):  # Maximum of 2000 epochs
+        total_error = 0
+        for data in training_data_xor:
+            input_data = data['input']
+            target_output = data['output']     
+            # Calculate the weighted sum
+            weighted_sum = np.dot(input_data, weight_copy)          
+            # Apply the step activation function
+            pred_output = step_function(weighted_sum)
+            # Calculate the error
+            error = target_output - pred_output       
+            # Update the weights
+            delta_w = learning_rate * error * input_data
+            weight_copy += delta_w
+            total_error += error
+        # Check for convergence
+        if abs(total_error) <= 0.002:
+            convergence_epoch = epoch
+            break
+    return convergence_epoch
+# Train the perceptron with different learning rates and record convergence epochs
+convergence_epochs = []
+for lr in learning_rates:
+    convergence_epoch = train_perceptron(lr)
+    convergence_epochs.append(convergence_epoch)
+#Printing convergence epochs
+print("CONVERGENCE EPOCHS FOR DIFFERENT LEARNING RATES:")
+print(convergence_epochs)
+# plot showing learning rates vs. convergence epochs
+plt.plot(learning_rates, convergence_epochs, marker='o', linestyle='-', color='b')
+plt.xlabel('Learning Rate')
+plt.ylabel('Convergence Epoch')
+plt.title('Learning Rate vs. Convergence Epoch')
+plt.grid(True)
+plt.show()
 
  
 
