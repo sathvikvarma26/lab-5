@@ -413,6 +413,77 @@ for i in range(len(data)):
     prediction = predict(x1, x2, x3, x4)
     classification = "Yes" if prediction >= 0.5 else "No"
     print(f"Customer C_{i + 1}: {classification}")
+ import numpy as np
+# Define initial weights and learning rate for the perceptron learning
+W0 = 0.3
+W1 = 0.3
+W2 = 0.3
+W3 = 0.3
+learning_rate = 0.3
+# Training data
+data = np.array([
+    [20, 6, 2, 386],
+    [16, 3, 6, 289],
+    [27, 6, 2, 393],
+    [19, 1, 2, 110],
+    [24, 4, 2, 280],
+    [22, 1, 5, 167],
+    [15, 4, 2, 271],
+    [18, 4, 2, 274],
+    [21, 1, 4, 148],
+    [16, 2, 4, 198]
+])
+# Target values (High Value or Low Value)
+targets = np.array([1, 1, 1, 0, 1, 0, 1, 1, 0, 0])
+# Define the sigmoid activation function
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+# Define the predict function for the perceptron
+def predict(x1, x2, x3, x4):
+    weighted_sum = W0 + W1 * x1 + W2 * x2 + W3 * x3
+    return sigmoid(weighted_sum)
+# Define the train_perceptron function
+def train_perceptron(max_epochs, data, targets):
+    global W0, W1, W2, W3  # Declare global variables
+    for epoch in range(max_epochs):
+        total_error = 0
+        for i in range(len(data)):
+            x1, x2, x3, x4 = data[i]
+            target = targets[i]
+            prediction = predict(x1, x2, x3, x4)
+            error = target - prediction
+            total_error += error
+            W0 += learning_rate * error
+            W1 += learning_rate * error * x1
+            W2 += learning_rate * error * x2
+            W3 += learning_rate * error * x3
+        if total_error == 0:
+            break
+# Train the perceptron
+train_perceptron(1000, data, targets)
+# Print the trained weights for the perceptron
+print("Trained Weights (Perceptron):")
+print(f"W0 = {W0}")
+print(f"W1 = {W1}")
+print(f"W2 = {W2}")
+print(f"W3 = {W3}")
+# Matrix Pseudo-Inverse
+X_bias = np.hstack((np.ones((data.shape[0], 1)), data))
+weights_pseudo_inverse = np.dot(np.linalg.pinv(X_bias), targets)
+# Print the trained weights using matrix pseudo-inverse
+print("\nTrained Weights (Matrix Pseudo-Inverse):")
+print(weights_pseudo_inverse)
+# Test the perceptron and matrix pseudo-inverse approaches and compare results
+perceptron_predictions = [1 if predict(*row) >= 0.5 else 0 for row in data]
+matrix_pseudo_inverse_predictions = [1 if np.dot(row, weights_pseudo_inverse) >= 0.5 else 0 for row in X_bias]
+# Compare the results
+perceptron_accuracy = np.mean(perceptron_predictions == targets) * 100
+matrix_pseudo_inverse_accuracy = np.mean(matrix_pseudo_inverse_predictions == targets) * 100
+print("\nAccuracy Comparison:")
+print(f"Perceptron Accuracy: {perceptron_accuracy:.2f}%")
+print(f"Matrix Pseudo-Inverse Accuracy: {matrix_pseudo_inverse_accuracy:.2f}%")
+
+
 
 
 
