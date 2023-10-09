@@ -111,6 +111,37 @@ plt.show()
 
 
 # In[ ]:
+#A2 Bipolar Function
+# Define Bi-Polar Step function
+def bipolar_step_function(x):
+    return np.where(x >= 0, 1, -1)#Bipolar function has values -1,0,1
+converge_error = 0.002#convergence error value is given in the question
+alpha = 0.05
+epochs = 1000
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])#inputs for and gate
+y = np.array([0, 0, 0, 1])#outputs for and gate
+W = np.array([10, 0.2, -0.75])#weights given in questio 
+errorlist = []#initialising an error list
+for epoch in range(epochs):
+    error = 0#initialise error value to 0
+    for i in range(len(X)):
+        y_pred = bipolar_step_function(np.dot(X[i], W[1:]) + W[0])
+        W[1:] += alpha * (y[i] - y_pred) * X[i]
+        W[0] += alpha * (y[i] - y_pred)
+        error += (y[i] - y_pred) ** 2
+    error /= len(X)#calculating error after each iteration
+    errorlist.append(error)#Append the error list with the error gained after each iteration
+    if error <= converge_error:
+        print("Bi-Polar Step Converged after", epoch+1, "epoch")#Printing after how many iterations ReLU function converged
+        break
+plt.plot(range(1, epoch+2), errorlist)
+print("Bi-Polar Step Converged after", epoch+1, "epoch")
+plt.xlabel('Epoch')
+plt.ylabel('Error')
+plt.title('Error vs Epoch')
+plt.show()#Plotting the graph for ReLU function
+
+
 
 
 
