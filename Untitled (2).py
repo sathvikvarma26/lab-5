@@ -482,6 +482,43 @@ matrix_pseudo_inverse_accuracy = np.mean(matrix_pseudo_inverse_predictions == ta
 print("\nAccuracy Comparison:")
 print(f"Perceptron Accuracy: {perceptron_accuracy:.2f}%")
 print(f"Matrix Pseudo-Inverse Accuracy: {matrix_pseudo_inverse_accuracy:.2f}%")
+#A7
+import numpy as np
+class ANDGateNeuralNetwork:
+    def __init__(self, learning_rate=0.05):
+        self.weights_ih = np.random.randn(2, 2)
+        self.weights_ho = np.random.randn(1, 2)
+        self.learning_rate = learning_rate
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+    def forward_propagate(self, inputs):
+        h = self.sigmoid(np.dot(self.weights_ih, inputs))
+        o = self.sigmoid(np.dot(self.weights_ho, h))
+        return o
+    def backpropagate(self, inputs, target_output, actual_output, h):
+        error = target_output - actual_output
+        gradient_ho = error * actual_output * (1 - actual_output)
+        gradient_ih = (gradient_ho @ self.weights_ho) * h * (1 - h)
+        self.weights_ho += self.learning_rate * np.outer(gradient_ho, h)
+        self.weights_ih += self.learning_rate * np.outer(gradient_ih, inputs)
+    def train(self, training_examples):
+        for inputs, target_output in training_examples:
+            h = self.sigmoid(np.dot(self.weights_ih, inputs))
+            actual_output = self.forward_propagate(inputs)
+            self.backpropagate(inputs, target_output, actual_output, h)
+    def predict(self, inputs):
+        return self.forward_propagate(inputs)
+# Create a new AND gate neural network
+network = ANDGateNeuralNetwork()
+# Train the network on the AND gate truth table
+training_examples = [(np.array([0, 0]), 0), (np.array([0, 1]), 0), (np.array([1, 0]), 0), (np.array([1, 1]), 1)]
+network.train(training_examples)
+# Test the network for multiple inputs
+inputs_list = [np.array([0, 0]), np.array([0, 1]), np.array([1, 0]), np.array([1, 1])]
+for inputs in inputs_list:
+    output = network.predict(inputs)
+    print(f"Input: {inputs}, Output: {output}")
+
 
 
 
