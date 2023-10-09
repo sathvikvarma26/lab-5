@@ -170,6 +170,35 @@ plt.xlabel('Epoch')
 plt.ylabel('Error')
 plt.title('Error vs Epoch (Sigmoid)')
 plt.show()#Plotting the graph for ReLU function
+#A2 Relu function
+# Define ReLU function
+def relu(x):
+    return np.maximum(0, x)
+converge_error = 0.002#error value to be taken is given in the question
+alpha = 0.05
+epochs = 1000
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])#input values for and gate
+y = np.array([0, 0, 0, 1])#output values for and gate
+W = np.array([10, 0.2, -0.75])#weights given in the question
+errorlist = []
+for epoch in range(epochs):
+    error = 0#initialise error to 0
+    for i in range(len(X)):
+        y_pred = relu(np.dot(X[i], W[1:]) + W[0])
+        W[1:] += alpha * (y[i] - y_pred) * X[i]
+        W[0] += alpha * (y[i] - y_pred)
+        error += (y[i] - y_pred) ** 2
+    error /= len(X)#Calculating error in each iteration
+    errorlist.append(error)#Appending the array with the error gained
+    if error <= converge_error:
+        print("ReLU Converged after", epoch+1, "epoch")#Printing after how many iterations ReLU function converged
+        break
+plt.plot(range(1, epoch+2), errorlist)
+plt.xlabel('Epoch')
+plt.ylabel('Error')
+plt.title('Error vs Epoch')
+plt.show()#Plotting the graph for ReLU function
+
 
 
 
