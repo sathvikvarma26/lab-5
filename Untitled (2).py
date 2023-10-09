@@ -241,6 +241,71 @@ plt.xlabel('Learning rate')
 plt.ylabel('Number of iterations to converge')
 plt.title('the number of iterations taken for learning to converge against the learning rates')
 plt.show()
+#a1
+import numpy as np
+import matplotlib.pyplot as plt
+# initial weights, learning rate, and convergence threshold
+initial_weights = np.array([-10, 0.2, -0.75])
+learning_rate = 0.05
+convergence_threshold = 0.002
+#training data for the XOR gate
+training_data_xor = [
+    {'input': np.array([1, 0, 0]), 'output': 0},
+    {'input': np.array([1, 0, 1]), 'output': 1},
+    {'input': np.array([1, 1, 0]), 'output': 1},
+    {'input': np.array([1, 1, 1]), 'output': 0},
+]
+# Define the step activation function
+def step_function(x):
+    return 1 if x >= 0 else 0
+# Training the perceptron
+max_epochs = 1000
+error_values = []
+weights = np.copy(initial_weights)  # Initialize weights
+for epoch in range(max_epochs):
+    total_error = 0
+    for obs in training_data_xor:
+        input_data = obs['input']
+        target_output = obs['output']
+        # Calculate the weighted sum
+        weighted_sum = np.dot(input_data, weights)
+        # Apply the step activation function
+        predicted_output = step_function(weighted_sum)
+        # Calculate the error
+        error = target_output - predicted_output
+        # Update the weights
+        delta_weights = learning_rate * error * input_data
+        weights += delta_weights
+        total_error += error
+    error_values.append(total_error)
+    # Print the total error for this epoch
+    if epoch % 100 == 0:
+        print(f"Epoch {epoch}: Total Error = {total_error}")
+    # Check for convergence
+    if abs(total_error) <= convergence_threshold:
+        print(f"Convergence achieved at epoch {epoch}")
+        break
+# plot of epochs against error values
+plt.plot(range(len(error_values)), error_values)
+plt.xlabel('Epochs')
+plt.ylabel('Total Error')
+plt.title('Epochs vs. Total Error')
+plt.show()
+#final weights
+print("Final Weights:")
+print(weights)
+# Test the perceptron with XOR gate inputs
+test_inputs = [
+    np.array([1, 0, 0]),
+    np.array([1, 0, 1]),
+    np.array([1, 1, 0]),
+    np.array([1, 1, 1]),
+]
+print("Test Results:")
+for test_input in test_inputs:
+    weighted_sum = np.dot(test_input, weights)
+    output = step_function(weighted_sum)
+    print(f"Input: {test_input[0:]} => Output: {output}")
 
 
 
