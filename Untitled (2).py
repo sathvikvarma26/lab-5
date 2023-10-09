@@ -199,6 +199,49 @@ plt.ylabel('Error')
 plt.title('Error vs Epoch')
 plt.show()#Plotting the graph for ReLU function
 
+#A3
+#define step function
+def step(x):
+  if x >= 0:
+    return 1
+  else:
+    return 0
+# Initialize the weights as given in the question
+W0 = 10
+W1 = 0.2
+W2 = -0.75
+#Initialise learning rate
+learning_rates = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+# Train the perceptron for different learning rates
+iterations = []
+for learning_rate in learning_rates:
+  # Train the perceptron
+  iteration_count = 0
+  for i in range(1000):
+    # Calculate the weighted sum
+    z = W0 + np.sum(X * np.array([W1, W2]), axis=1)
+    # Calculate the output
+    output = np.array([step(val) for val in z])
+    # Calculate the error
+    error = y - output
+    # Update the weights
+    W0 += learning_rate * error.sum()
+    W1 += learning_rate * np.dot(error, X[:, 0])
+    W2 += learning_rate * np.dot(error, X[:, 1])
+    # Increment the iteration count
+    iteration_count += 1
+    # If the perceptron has converged, stop training
+    if np.sum(error) == 0:
+      break
+  # Add the number of iterations to the list
+  iterations.append(iteration_count)
+# Plot the number of iterations taken for learning to converge against the learning rates
+plt.plot(learning_rates, iterations)
+plt.xlabel('Learning rate')
+plt.ylabel('Number of iterations to converge')
+plt.title('the number of iterations taken for learning to converge against the learning rates')
+plt.show()
+
 
 
 
